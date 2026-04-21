@@ -1,0 +1,210 @@
+1. COMPLETE PROJECT FLOW (Big Picture)
+User speaks → Upload audio + text
+        ↓
+Backend (FastAPI)
+        ↓
+Audio Processing
+        ↓
+Feature Extraction (pitch, mfcc, energy)
+        ↓
+Text Processing → Phonemes
+        ↓
+Compare Expected vs Spoken
+        ↓
+Score Calculation
+        ↓
+Feedback Generation
+        ↓
+Response to user
+
+👉 This is exactly how apps like Duolingo / Elsa Speak work (simplified version)
+
+🧩 2. YOUR PROJECT STRUCTURE (Meaning of each folder)
+pronounciationML/
+│
+├── api/
+│   └── routes.py
+│
+├── audio_processing/
+│   └── audio_loader.py
+│
+├── feature_extraction/
+│   ├── pitch_extractor.py
+│   ├── mfcc_extractor.py
+│   └── energy_extractor.py
+│
+├── speech_processing/
+│   └── phoneme_extractor.py
+│
+├── pronunciation_scoring/
+│   ├── phoneme_alignment.py
+│   └── score_calculator.py
+│
+├── feedback/
+│   └── feedback_generator.py
+🔥 3. STEP-BY-STEP FLOW (Deep Explanation)
+🎤 STEP 1: Audio Input
+File: routes.py
+audio: UploadFile
+transcript: str
+
+👉 User gives:
+
+Voice (audio)
+
+What they intended to say
+
+🔊 STEP 2: Audio Processing
+File: audio_loader.py
+audio, sr = librosa.load(path, sr=16000)
+
+Using:
+👉 librosa
+
+What happens:
+
+Converts audio → waveform (numbers)
+
+Resamples to 16kHz
+
+👉 Example:
+
+"hello" → [0.01, -0.03, 0.2, ...]
+🎼 STEP 3: Feature Extraction
+
+These are core ML features 👇
+
+🎵 (A) Pitch
+
+File: pitch_extractor.py
+
+👉 Measures:
+
+How high or low voice is
+
+Example:
+
+Correct tone → good pronunciation
+
+Flat tone → poor clarity
+
+🎧 (B) MFCC (Most Important)
+
+File: mfcc_extractor.py
+
+👉 MFCC = Mel Frequency Cepstral Coefficients
+
+Using:
+👉 Mel Frequency Cepstral Coefficients
+
+👉 It captures:
+
+Sound shape (how words are spoken)
+
+👉 This is used in:
+
+Speech recognition
+
+Voice assistants
+
+🔋 (C) Energy
+
+File: energy_extractor.py
+
+👉 Measures:
+
+Loudness of speech
+
+Example:
+
+Too low → unclear speech
+
+Too high → distortion
+
+🧠 STEP 4: Text → Phonemes
+File: phoneme_extractor.py
+phonemes = g2p(text)
+
+Using:
+
+g2p_en
+
+NLTK
+
+💡 What are phonemes?
+
+👉 Smallest sound units:
+
+"hello" → HH AH L OW
+🔍 What NLTK does internally
+
+NLTK helps with:
+
+1️⃣ Tokenization
+"hello how are you" → ["hello", "how", "are", "you"]
+2️⃣ POS Tagging
+hello → noun/verb
+3️⃣ Used by g2p_en
+
+👉 To convert words → phonemes correctly
+
+⚖️ STEP 5: Phoneme Comparison
+File: phoneme_alignment.py
+compare_phonemes(expected, spoken)
+
+👉 Currently:
+
+expected = spoken ❌ (fake)
+
+👉 In real system:
+
+Speech-to-text converts audio → phonemes
+
+Then compare
+
+📊 STEP 6: Score Calculation
+File: score_calculator.py
+score = calculate_score(pitch, mfcc, energy, phoneme_score)
+
+👉 Combines:
+
+Voice tone
+
+Sound quality
+
+Pronunciation correctness
+
+💬 STEP 7: Feedback Generation
+File: feedback_generator.py
+feedback = generate_feedback(score)
+
+Example:
+
+Score > 80 → Excellent
+Score 50–80 → Good
+Score < 50 → Needs improvement
+🔁 FINAL RESPONSE
+{
+  "score": 75,
+  "feedback": "Good pronunciation, improve clarity"
+}
+🧠 4. REAL VS YOUR CURRENT SYSTEM
+Feature	Your System	Real System
+Audio input	✅	✅
+Feature extraction	✅	✅
+Phoneme extraction	✅	✅
+Spoken phonemes	❌ (fake)	✅ (from audio)
+Accuracy	⚠️ medium	🔥 high
+🚀 5. WHAT YOU BUILT (IMPORTANT)
+
+👉 You built a Speech Processing Pipeline
+
+Includes:
+
+Audio signal processing
+
+NLP (text → phonemes)
+
+ML features
+
+Scoring system
