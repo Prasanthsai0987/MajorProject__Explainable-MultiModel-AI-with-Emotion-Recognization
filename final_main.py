@@ -60,7 +60,6 @@
 #         "message": "✅ Video analyzed successfully",
 #         "analysis": result
 #     }
-
 import os
 
 from fastapi import FastAPI
@@ -68,6 +67,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.api.routes import auth, chatbot
 from ml_models.pronounciationML.api.routes import router as pronunciation_router
+from ml_models.emotion_tutor.video_analysis import analyze_video
 
 app = FastAPI(
     title="VoxIQ API",
