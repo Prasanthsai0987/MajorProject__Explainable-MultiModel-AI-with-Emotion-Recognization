@@ -61,14 +61,18 @@
 #         "analysis": result
 #     }
 import os
+import shutil
 
-from fastapi import FastAPI
+from fastapi import FastAPI, UploadFile, File
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
 
 from app.api.routes import auth, chatbot
-from ml_models.pronounciationML.api.routes import router as pronunciation_router
+from ml_models.pronounciationML.api.routes import (
+    router as pronunciation_router,
+    evaluate_pronunciation_logic,
+)
 from ml_models.emotion_tutor.video_analysis import analyze_video
-from ml_models.pronounciationML.api.routes import evaluate_pronunciation_logic
 
 app = FastAPI(
     title="VoxIQ API",
