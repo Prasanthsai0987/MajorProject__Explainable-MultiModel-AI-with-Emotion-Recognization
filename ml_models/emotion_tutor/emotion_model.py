@@ -21,9 +21,18 @@ EMOTIONS = [
 emotion_buffer = deque(maxlen=7)
 CONFIDENCE_THRESHOLD = 0.55
 
-print("Loading emotion model...")
-model = load_model(MODEL_PATH)
-print("Emotion model loaded")
+model = None
+
+
+def get_model():
+    global model
+
+    if model is None:
+        print("Loading emotion model...")
+        model = load_model(MODEL_PATH)
+        print("Emotion model loaded.")
+
+    return model
 
 
 def preprocess_face(face_img):
@@ -43,7 +52,10 @@ def predict_emotion(face_img):
     try:
         input_tensor = preprocess_face(face_img)
 
+        model = get_model()
+
         preds = model.predict(input_tensor, verbose=0)[0]
+
         confidence = np.max(preds)
         emotion_idx = np.argmax(preds)
 
@@ -53,10 +65,11 @@ def predict_emotion(face_img):
             emotion = EMOTIONS[emotion_idx]
 
         emotion_buffer.append(emotion)
+
         stable_emotion = max(set(emotion_buffer), key=emotion_buffer.count)
 
         return stable_emotion
 
     except Exception as e:
-        print("Emotion prediction error:", e)
+        print(e)
         return "unknown"
