@@ -68,6 +68,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.api.routes import auth, chatbot
 from ml_models.pronounciationML.api.routes import router as pronunciation_router
 from ml_models.emotion_tutor.video_analysis import analyze_video
+from ml_models.pronounciationML.api.routes import evaluate_pronunciation_logic
 
 app = FastAPI(
     title="VoxIQ API",
@@ -100,3 +101,27 @@ os.makedirs(TEMP_DIR, exist_ok=True)
 @app.get("/")
 def root():
     return {"message": "VoxIQ API is running 🚀"}
+    
+from fastapi import UploadFile, File
+from fastapi.responses import JSONResponse
+import shutil
+
+@app.post("/upload-video")
+async def upload_and_analyze(video: UploadFile = File(...)):
+    video_path = os.path.join(TEMP_DIR, video.filename)
+
+    with open(video_path, "wb") as buffer:
+        shutil.copyfileobj(video.file, buffer)
+
+    try:
+        result = analyze_video(video_path)
+    except Exception as e:
+        return JSONResponse(status_code=500, content={"error": str(e)})
+    finally:
+        if os.path.exists(video_path):
+            os.remove(video_path)
+
+    return {
+        "message": "Video analyzed successfully",
+        "analysis": result
+    }
