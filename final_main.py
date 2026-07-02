@@ -61,13 +61,13 @@
 #         "analysis": result
 #     }
 
-
 import os
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.api.routes import auth, chatbot
+from ml_models.pronounciationML.api.routes import router as pronunciation_router
 
 app = FastAPI(
     title="VoxIQ API",
@@ -90,6 +90,7 @@ app.add_middleware(
 
 app.include_router(auth.router)
 app.include_router(chatbot.router)
+app.include_router(pronunciation_router)
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 TEMP_DIR = os.path.join(BASE_DIR, "temp_videos")
@@ -99,5 +100,3 @@ os.makedirs(TEMP_DIR, exist_ok=True)
 @app.get("/")
 def root():
     return {"message": "VoxIQ API is running 🚀"}
-
-print("===== APP INITIALIZATION COMPLETE =====")
