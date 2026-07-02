@@ -68,6 +68,8 @@
 import os
 import shutil
 import subprocess
+from fastapi import Form
+import uuid
 
 from fastapi import FastAPI, UploadFile, File
 from fastapi.middleware.cors import CORSMiddleware
@@ -169,6 +171,49 @@ async def upload_and_analyze(video: UploadFile = File(...)):
     finally:
         if os.path.exists(video_path):
             os.remove(video_path)
+@app.post("/analyze-session")
+async def analyze_session(
+    video: UploadFile = File(...),
+    transcript: str = Form(...)
+):
+    video_filename = f"{uuid.uuid4()}.webm"
+    audio_filename = f"{uuid.uuid4()}.mp3"
+
+    video_path = os.path.join(TEMP_DIR, video_filename)
+    audio_path = os.path.join(TEMP_DIR, audio_filename)
+
+    try:
+        # Save video
+        with open(video_path, "wb") as buffer:
+            shutil.copyfileobj(video.file, buffer)
+
+        # Extract audio using FFmpeg
+        extract_audio(video_path, audio_path)
+
+        # Run ML models
+        video_result = analyze_video(video_path)
+        pronunciation_result = evaluate_pronunciation_logic(audio_path, transcript)
+
+        return {
+            "message": "Full session analyzed",
+            "video_analysis": video_result,
+            "speech_analysis": pronunciation_result
+        }
+
+    except Exception as e:
+        print("Session Error:", e)
+
+        return JSONResponse(
+            status_code=500,
+            content={"error": str(e)}
+        )
+
+    finally:
+        if os.path.exists(video_path):
+            os.remove(video_path)
+
+        if os.path.exists(audio_path):
+            os.remove(audio_path)
 
 
 
