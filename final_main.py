@@ -62,32 +62,18 @@
 #     }
 
 
-
 import os
 
-print("===== STARTING APP =====")
-
-print("1 - Importing FastAPI")
 from fastapi import FastAPI
-
-print("2 - Importing CORS")
 from fastapi.middleware.cors import CORSMiddleware
 
-print("3 - Importing auth router")
-from app.api.routes import auth
-
-print("4 - Importing chatbot router")
-from app.api.routes import chatbot
-
-print("5 - Imports completed")
+from app.api.routes import auth, chatbot
 
 app = FastAPI(
     title="VoxIQ API",
     description="Multimodal AI for Smarter Communication",
     version="1.0.0",
 )
-
-print("6 - FastAPI app created")
 
 app.add_middleware(
     CORSMiddleware,
@@ -102,25 +88,16 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-print("7 - CORS configured")
-
 app.include_router(auth.router)
-print("8 - Auth router added")
-
 app.include_router(chatbot.router)
-print("9 - Chatbot router added")
-
-
-@app.get("/")
-def root():
-    return {"message": "VoxIQ API is running 🚀"}
-
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 TEMP_DIR = os.path.join(BASE_DIR, "temp_videos")
 os.makedirs(TEMP_DIR, exist_ok=True)
 
-print("10 - Temp directory created")
-print("===== APP INITIALIZATION COMPLETE =====")
+
+@app.get("/")
+def root():
+    return {"message": "VoxIQ API is running 🚀"}
 
 print("===== APP INITIALIZATION COMPLETE =====")
