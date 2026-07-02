@@ -67,6 +67,7 @@
 
 import os
 import shutil
+import subprocess
 
 from fastapi import FastAPI, UploadFile, File
 from fastapi.middleware.cors import CORSMiddleware
@@ -126,6 +127,18 @@ def root():
         "message": "VoxIQ API is running 🚀"
     }
 
+# ------------------- AUDIO EXTRACTION -------------------
+
+def extract_audio(video_path, audio_path):
+    command = [
+        "ffmpeg",
+        "-i", video_path,
+        "-vn",
+        "-acodec", "mp3",
+        audio_path
+    ]
+
+    subprocess.run(command, check=True)
 # ------------------- VIDEO ANALYSIS -------------------
 
 @app.post("/upload-video")
