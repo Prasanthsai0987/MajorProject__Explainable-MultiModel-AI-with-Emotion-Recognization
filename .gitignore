@@ -1,4 +1,8 @@
 venv/
 __pycache__/
 *.pyc
+uploads/
+*.mp3
+*.webm
+
 .env
