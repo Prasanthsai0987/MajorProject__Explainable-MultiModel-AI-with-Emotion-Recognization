@@ -1,25 +1,29 @@
+import os
+import sys
+import shutil
+import subprocess
 import uuid
 
 from fastapi import FastAPI, Form, UploadFile, File
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
-# Ensure project root (backend/) is on sys.path so imports like `app.*` work when running locally.
+# Ensure project root (backend/) is on sys.path
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
 if BASE_DIR not in sys.path:
     sys.path.append(BASE_DIR)
 
 # Routers
 from app.api.routes import auth, chatbot
+
 from ml_models.pronounciationML.api.routes import (
     router as pronunciation_router,
-    evaluate_pronunciation_logic
+    evaluate_pronunciation_logic,
 )
 
 # Video analysis
 from ml_models.emotion_tutor.video_analysis import analyze_video
-from ml_models.pronounciationML.api.routes import evaluate_pronunciation_logic
-
 # ------------------- FASTAPI APP -------------------
 
 app = FastAPI(
@@ -38,6 +42,7 @@ app.add_middleware(
         "http://localhost:5174",
         "http://127.0.0.1:5173",
         "http://127.0.0.1:5174",
+        "https://major-project-explainable-multi-mod.vercel.app",
     ],
     allow_credentials=True,
     allow_methods=["*"],
