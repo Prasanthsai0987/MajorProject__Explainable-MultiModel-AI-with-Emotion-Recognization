@@ -43,15 +43,8 @@ os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 print("13. defining function")
 
-<<<<<<< HEAD
-
-def evaluate_pronunciation_logic(filepath, transcript):
-
-=======
 # ---------------- MAIN PRONUNCIATION API ----------------
 def evaluate_pronunciation_logic(filepath, transcript):
-    # 2️⃣ Load audio
->>>>>>> 0eac9bd (Update backend deployment and production configuration)
     audio_data, sr = load_audio(filepath)
 
     pitch = extract_pitch(audio_data, sr)
