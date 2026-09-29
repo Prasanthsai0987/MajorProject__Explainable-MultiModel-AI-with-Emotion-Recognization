@@ -9,10 +9,6 @@ psycopg2-binary==2.9.9
 python-dotenv==1.0.1
 python-jose[cryptography]==3.3.0
 passlib[bcrypt]==1.7.4
-<<<<<<< HEAD
-=======
-bcrypt==4.0.1
->>>>>>> 0eac9bd (Update backend deployment and production configuration)
 python-multipart==0.0.9
 email-validator==2.2.0
 pydantic==2.10.6
@@ -60,8 +56,4 @@ tqdm==4.67.1
 
 protobuf==3.20.3
 h5py==3.8.0
-<<<<<<< HEAD
 grpcio==1.62.2
-=======
-grpcio==1.62.2
->>>>>>> 0eac9bd (Update backend deployment and production configuration)
