@@ -72,8 +72,4 @@ def predict_emotion(face_img):
 
     except Exception as e:
         print(e)
-<<<<<<< HEAD
         return "unknown"
-=======
-        return "unknown"
->>>>>>> 0eac9bd (Update backend deployment and production configuration)
