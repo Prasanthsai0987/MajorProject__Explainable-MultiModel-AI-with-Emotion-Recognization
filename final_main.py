@@ -7,6 +7,9 @@ import uuid
 from fastapi import FastAPI, Form, UploadFile, File
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
+from app.db.database import Base, engine
+from app.db import models
+from sqlalchemy import text
 
 # Ensure project root (backend/) is on sys.path
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -31,6 +34,8 @@ app = FastAPI(
     description="Multimodal AI for Smarter Communication",
     version="1.0.0",
 )
+
+Base.metadata.create_all(bind=engine)
 
 # ------------------- CORS -------------------
 
@@ -157,7 +162,24 @@ async def analyze_session(
             os.remove(audio_path)
 
 
+@app.get("/api/db-test")
+def db_test():
 
+    try:
+        with engine.connect() as connection:
 
+            result = connection.execute(
+                text("SELECT 1")
+            )
 
+            return {
+                "database": "connected",
+                "result": result.scalar()
+            }
 
+    except Exception as e:
+
+        return {
+            "database": "failed",
+            "error": str(e)
+        }

@@ -1,5 +1,1 @@
-<<<<<<< HEAD
 python-3.11.11
-=======
-python-3.11.11
->>>>>>> 0eac9bd (Update backend deployment and production configuration)
