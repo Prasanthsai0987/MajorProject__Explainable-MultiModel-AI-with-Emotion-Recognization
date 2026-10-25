@@ -8,6 +8,7 @@ from fastapi import FastAPI, Form, UploadFile, File
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from sqlalchemy import text
+from fastapi.responses import HTMLResponse
 
 # Ensure project root (backend/) is on sys.path
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -91,16 +92,6 @@ TEMP_DIR = os.path.join(BASE_DIR, "temp_videos")
 
 os.makedirs(TEMP_DIR, exist_ok=True)
 
-
-# ============================================================
-# ROOT
-# ============================================================
-
-@app.get("/")
-def root():
-    return {
-        "message": "VoxIQ API is running 🚀"
-    }
 
 
 # ============================================================
@@ -263,3 +254,25 @@ def db_test():
             "database": "failed",
             "error": str(e),
         }
+        
+        
+
+# ============================================================
+# ROOT + GOOGLE SEARCH CONSOLE VERIFICATION
+# ============================================================
+
+@app.get("/", response_class=HTMLResponse)
+def root():
+    return """
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <meta name="google-site-verification"
+              content="cQXtvqNL5SGGEYFXd6C0rrKRGuK7MQCY-WwtJIiBBio" />
+        <title>VoxIQ API</title>
+    </head>
+    <body>
+        <h1>VoxIQ API is running</h1>
+    </body>
+    </html>
+    """
